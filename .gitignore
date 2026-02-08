@@ -1,0 +1,135 @@
+# ===========================================
+# MONOREPO .gitignore - TS + pnpm + React
+# ===========================================
+# NOTA: Esto NO es magia negra. Cada línea tiene una razón.
+# Si no entendés por qué está algo acá, LEÉ los comentarios.
+
+# ===== PNPM (Tu package manager) =====
+# pnpm usa un store global para no duplicar paquetes.
+# ESTO ES LOCAL, no va al repo. Sin esto, subís GBs de cache.
+node_modules/
+.pnpm-store/
+.pnpm-debug.log*
+
+# Lockfiles - DECIDÍ bien esto:
+# pnpm-lock.yaml → INCLUÍLO (deterministic installs)
+# package-lock.json / yarn.lock → IGNORALOS (si estás con pnpm)
+# npm-shrinkwrap.json → Basura legacy, ignorá
+package-lock.json
+yarn.lock
+npm-shrinkwrap.json
+
+# ===== TYPESCRIPT =====
+# tsbuildinfo = cache de compilación incremental.
+# NO es tu código, es metadata para que TSC compile más rápido la próxima vez.
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# ===== REACT / BUILD TOOLS =====
+# Esto es LO MÁS IMPORTANTE que ignorar:
+# - dist/, build/, out/ = código compilado/transpilado
+# - .next/ = cache y build de Next.js (si lo usás)
+# - .cache/ = cache de bundlers (Vite, Webpack, etc)
+# SUBIR ESTO ES UN ERROR DE PRINCIPIANTE. Tu código fuente está en src/, no acá.
+dist/
+build/
+out/
+.output/
+.next/
+.cache/
+.parcel-cache/
+.vite/
+*.cache
+
+# ===== VITE (Probablemente lo uses con React) =====
+# Vite genera estos directorios de desarrollo
+.vitepress/dist
+*.local
+
+# ===== TESTING =====
+# coverage/ = reportes de tests (HTML/lcov). 
+# Se regenera cada vez que corrés tests. NO va al repo.
+coverage/
+.nyc_output/
+*.lcov
+junit.xml
+
+# ===== ENVIRONMENT & SECRETS =====
+# ⚠️ ESTO ES CRÍTICO. NUNCA, JAMÁS subas archivos .env
+# En un monorepo, cada app puede tener el suyo: apps/web/.env, apps/api/.env
+# Si comiteás uno, exponés API keys, DB URLs, JWT secrets. 
+# TU CARRERA ACABA DE TERMINAR SI LO HACÉS.
+.env
+.env.*
+.env.local
+.env.*.local
+!.env.example      # Esto SÍ se sube, como template
+!.env.template     # Esto SÍ se sube, como template
+
+# Archivos de certificados/keys (por si usás HTTPS local)
+*.pem
+*.key
+*.crt
+
+# ===== LOGS =====
+# Tu terminal genera estos cuando algo falla.
+# Son temporales, útiles solo para debug local.
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ===== IDE & EDITORS =====
+# Tu IDE es TU problema, no del equipo.
+# Config personal no va al repo (a menos que sea .vscode/extensions.json)
+.idea/              # JetBrains (WebStorm, IntelliJ)
+.vscode/*
+!.vscode/extensions.json    # Esto SÍ: recomienda extensiones al equipo
+!.vscode/settings.json      # Esto SÍ: settings compartidos (formateo, etc)
+*.swp               # Vim swap files
+*.swo
+*~
+.DS_Store           # macOS basura
+
+# ===== OS & TEMP FILES =====
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+*.tmp
+*.temp
+*.pid
+*.seed
+
+# ===== LINTING & FORMATTING CACHE =====
+# Estos aceleran linting incremental. Son cache local.
+.eslintcache
+.stylelintcache
+.prettiercache
+
+# ===== MONOREPO TOOLS (Para cuando crezcas) =====
+# Si en el futuro usás Turborepo, NX, etc:
+.turbo/
+.nx/
+
+# ===== STORYBOOK (Si lo usás con React) =====
+storybook-static/
+
+# ===== PLAYWRIGHT / CYPRESS (E2E Testing) =====
+test-results/
+playwright-report/
+playwright/.cache/
+cypress/videos/
+cypress/screenshots/
+
+# ===== VERCEL / NETLIFY / DEPLOY =====
+# Config local de deploy. Cada dev tiene la suya.
+.vercel
+.netlify

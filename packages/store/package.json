@@ -1,0 +1,10 @@
+{
+  "name": "@lifeos/store",
+  "private": true,
+  "dependencies": {
+    "zustand": "^5.0.11"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}
